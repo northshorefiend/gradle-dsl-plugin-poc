@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+    id 'checkstyle'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+checkstyle {
+    configFile resources.text.fromArchiveEntry(buildscript.configurations.classpath, "google_checks.xml").asFile()
+    toolVersion '10.12.6'
+}
+
+/* https://github.com/gradle/gradle/issues/27035 */
+configurations.checkstyle {
+    resolutionStrategy.capabilitiesResolution.withCapability("com.google.collections:google-collections") {
+        select("com.google.guava:guava:0")
+    }
+}

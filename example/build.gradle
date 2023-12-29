@@ -1,0 +1,7 @@
+plugins {
+    id 'com.example.java-conventions' version '0.1'
+}
+
+repositories {
+    mavenCentral()
+}
