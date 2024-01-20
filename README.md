@@ -1,8 +1,8 @@
 # A gradle plugin written in gradle DSL rather than Java or Kotlin
 
 ## TL;DR
-1. Build the plugin with the commands in <plugin/README.md>
-2. Build the example project with the commands in <example/README.md>
+1. Build the plugin with the commands in [plugin/README.md](plugin/README.md)
+2. Build the example project with the commands in [example/README.md](example/README.md)
 
 ## Why a Plugin in Gradle DSL
 I've been holding out switching to Gradle for far too long. I know Maven can be annoying, but for most simple projects
@@ -17,11 +17,27 @@ then making it work with the new project. Being new to Gradle, I wanted to start
 so on reading the [Gradle docs](https://docs.gradle.org/current/userguide/custom_plugins.html) I wanted to create
 a custom plugin.
 
-
-Now, we are all busy people, and I didn't want to have to rewrite the working Gradle DSL in Kotlin, Java or Gradle. I
-saw in the docs you could write plugins in Gradle Groovy DSL. Though from the docs, it looks like you can only do this,
-also known as a precompiled script plugin, using the buildSrc method. This is where you put a directory called buildSrc
-in the root of your Gradle project and write your plugin there. But that doesn't solve my problem, I want a standalone
+## Gradle Plugin
+Now, we are all busy people, and I didn't want to have to rewrite the working Gradle DSL in Kotlin, Java or Groovy. I
+saw in the docs you could write plugins in Gradle Groovy DSL. Though from the docs, it looks like you can only do this
+using the buildSrc method. This is where you put a directory called `buildSrc`
+in the root of your Gradle project and write your plugin there. But that doesn't solve my problem; I want a standalone
 plugin that I can build separately and use in multiple projects. So, I had the question, can you make a standalone
 Gradle DSL plugin? Well, with a bit of trial and error I worked it out.
 
+## Gradle DSL standalone plugin
+This all works by convention. Firstly, let's start with the `build.gradle` for the plugin:
+```
+plugins {
+    id 'groovy-gradle-plugin'
+    id 'maven-publish'
+}
+
+group 'com.example.java-conventions'
+version '0.1'
+```
+
+Here, you need the `groovy-gradle-plugin` that compiles and packages to code as a Gradle plugin. Then, we need to talk about
+names: If you want your plugin to have the id `com.example.java-conventions` then that needs to be set as the group
+in your `build.gradle`. You will also need to set a `version`. I have included the `maven-publish` plugin so that we can
+use the local `~/.m2` repository to test our new plugin locally.
