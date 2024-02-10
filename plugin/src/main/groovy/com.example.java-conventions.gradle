@@ -16,7 +16,7 @@ configurations.checkstyle {
 }
 
 checkstyle {
-    configFile file("${rootDir}/build/myConfig/google_checks.xml")
+    configFile file("build/myConfig/google_checks.xml")
     toolVersion '10.12.6'
 }
 
