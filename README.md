@@ -132,20 +132,18 @@ And that is it, you have created a plugin using the Gradle groovy dsl! In our ca
 invoke the checkstyle plugin with our custom config:
 
 ```
-// these two stanzas copy the config file from the plugin resources to the project build dir ready for the above
-// checkstyle config
+$ ./gradlew clean build
 
-tasks.register('copyCheckStyleConfig') {
-    outputs.file('build/myConfig/google_checks.xml')
-    doLast {
-        copy {
-            from resources.text.fromArchiveEntry(buildscript.configurations.classpath, "google_checks.xml").asFile()
-            into 'build/myConfig'
-        }
-    }
-}
+> Task :checkstyleMain
+[ant:checkstyle] [WARN] /home/northshorefiend/git/gradle-dsl-plugin-poc/example/src/main/java/com/example/hello/Main.java:3:1: Missing a Javadoc comment. [MissingJavadocType]
+[ant:checkstyle] [WARN] /home/northshorefiend/git/gradle-dsl-plugin-poc/example/src/main/java/com/example/hello/Main.java:4:5: 'method def modifier' has incorrect indentation level 4, expected level should be 2. [Indentation]
+[ant:checkstyle] [WARN] /home/northshorefiend/git/gradle-dsl-plugin-poc/example/src/main/java/com/example/hello/Main.java:5:13: 'method def' child has incorrect indentation level 12, expected level should be 4. [Indentation]
+[ant:checkstyle] [WARN] /home/northshorefiend/git/gradle-dsl-plugin-poc/example/src/main/java/com/example/hello/Main.java:6:5: 'method def rcurly' has incorrect indentation level 4, expected level should be 2. [Indentation]
+Checkstyle rule violations were found. See the report at: file:///home/northshorefiend/git/gradle-dsl-plugin-poc/example/build/reports/checkstyle/main.html
+Checkstyle files with violations: 1
+Checkstyle violations by severity: [warning:4]
 
-tasks.named('checkstyleMain') {
-    dependsOn('copyCheckStyleConfig')
-}
+
+BUILD SUCCESSFUL in 2s
+5 actionable tasks: 5 executed
 ```
