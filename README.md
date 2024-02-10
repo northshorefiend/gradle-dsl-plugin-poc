@@ -70,7 +70,7 @@ Next we need to configure the checkstyle plugin. This plugin needs a config file
 
 ```
 checkstyle {
-    configFile file("${rootDir}/build/tmp/google_checks.xml")
+    configFile file("${rootDir}/build/myConfig/google_checks.xml")
     toolVersion '10.12.6'
 }
 
