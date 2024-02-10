@@ -1,4 +1,4 @@
-# A gradle plugin written in gradle DSL rather than Java or Kotlin
+# A Gradle plugin written in Gradle DSL rather than Java or Kotlin
 
 ## TL;DR
 1. Get the code from [my github]()
