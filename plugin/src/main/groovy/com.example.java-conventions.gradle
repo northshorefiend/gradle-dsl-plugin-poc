@@ -16,18 +16,23 @@ configurations.checkstyle {
 }
 
 checkstyle {
-    configFile file("${rootDir}/build/tmp/google_checks.xml")
+    configFile file("${rootDir}/build/myConfig/google_checks.xml")
     toolVersion '10.12.6'
 }
 
-// The below two stanzas copy the checkstyle config from the resources of the plugin to the build dir of the project
-// You can use this to put in place any resources needed for the tasks you are configuring in the plugin
-tasks.register('copyCheckStyleConfig', Copy) {
-    from resources.text.fromArchiveEntry(buildscript.configurations.classpath, "google_checks.xml").asFile()
-    into 'build/tmp'
+// these two stanzas copy the config file from the plugin resources to the project build dir ready for the above
+// checkstyle config
+
+tasks.register('copyCheckStyleConfig') {
+    outputs.file('build/myConfig/google_checks.xml')
+    doLast {
+        copy {
+            from resources.text.fromArchiveEntry(buildscript.configurations.classpath, "google_checks.xml").asFile()
+            into 'build/myConfig'
+        }
+    }
 }
 
-tasks.named('checkstyleMain') { dependsOn('copyCheckStyleConfig') }
-
-// The below is needed as we are copying to the build dir that is also used by the jar task
-tasks.named('jar') { dependsOn('copyCheckStyleConfig') }
+tasks.named('checkstyleMain') {
+    dependsOn('copyCheckStyleConfig')
+}

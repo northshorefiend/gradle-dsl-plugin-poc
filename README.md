@@ -74,21 +74,26 @@ checkstyle {
     toolVersion '10.12.6'
 }
 
-// The below two stanzas copy the checkstyle config from the resources of the plugin to the build dir of the project
-// You can use this to put in place any resources needed for the tasks you are configuring in the plugin
-tasks.register('copyCheckStyleConfig', Copy) {
-    from resources.text.fromArchiveEntry(buildscript.configurations.classpath, "google_checks.xml").asFile()
-    into 'build/tmp'
+// these two stanzas copy the config file from the plugin resources to the project build dir ready for the above
+// checkstyle config
+
+tasks.register('copyCheckStyleConfig') {
+    outputs.file('build/myConfig/google_checks.xml')
+    doLast {
+        copy {
+            from resources.text.fromArchiveEntry(buildscript.configurations.classpath, "google_checks.xml").asFile()
+            into 'build/myConfig'
+        }
+    }
 }
 
-tasks.named('checkstyleMain') { dependsOn('copyCheckStyleConfig') }
-
-// The below is needed as we are copying to the build dir that is also used by the jar task
-tasks.named('jar') { dependsOn('copyCheckStyleConfig') }
+tasks.named('checkstyleMain') {
+    dependsOn('copyCheckStyleConfig')
+}
 ```
 
 I am configuring checkstyle to use a config file that is in the plugin resources `src/main/resources/google_checks.xml`.
-It is copied by the checkstyleMain task we have created. 
+It is copied by the copyCheckStyleConfig task I have created. 
 It's a good example of how you can configure something once in the plugin and roll it out to all your projects just by
 bumping the version of the plugin they are pulling in.
 
@@ -123,4 +128,24 @@ repositories {
 
 We also need to specify somewhere to get the dependencies of the checkstyle plugin from, here mavenCentral().
 
-And that is it, you have created a plugin using the Gradle groovy dsl!
+And that is it, you have created a plugin using the Gradle groovy dsl! In our case, running a build will
+invoke the checkstyle plugin with our custom config:
+
+```
+// these two stanzas copy the config file from the plugin resources to the project build dir ready for the above
+// checkstyle config
+
+tasks.register('copyCheckStyleConfig') {
+    outputs.file('build/myConfig/google_checks.xml')
+    doLast {
+        copy {
+            from resources.text.fromArchiveEntry(buildscript.configurations.classpath, "google_checks.xml").asFile()
+            into 'build/myConfig'
+        }
+    }
+}
+
+tasks.named('checkstyleMain') {
+    dependsOn('copyCheckStyleConfig')
+}
+```
